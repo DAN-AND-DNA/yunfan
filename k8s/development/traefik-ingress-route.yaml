@@ -1,0 +1,19 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: snk.ingressroute
+  namespace: snk-development
+spec:
+  entryPoints:
+    - web
+  routes:
+  - kind: Rule
+    match: PathPrefix(`/v1.user-service`)
+    services:
+    - name: user-service
+      port: 3777
+  - kind: Rule
+    match: PathPrefix(`/v1.media-api-info-service`)
+    services:
+    - name: media-api-info-service
+      port: 3777

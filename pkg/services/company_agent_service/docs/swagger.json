@@ -1,0 +1,109 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "公司代理服务",
+        "title": "company-agent-service",
+        "termsOfService": "https://github.com/DAN-AND-DNA?tab=stars",
+        "contact": {
+            "name": "Snk技术开发中心",
+            "email": "danyang.chen@snkad.cn"
+        },
+        "version": "0.1.0"
+    },
+    "basePath": "/",
+    "paths": {
+        "/v1.company-agent-service.Get_company_data": {
+            "post": {
+                "description": "查询公司数据",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "company-agent-service"
+                ],
+                "summary": "查询公司数据",
+                "parameters": [
+                    {
+                        "description": "args",
+                        "name": "args",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/company_agent_service.Get_company_data_args"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "reply",
+                        "schema": {
+                            "$ref": "#/definitions/company_agent_service.Get_company_data_reply"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "company_agent_service.Company_data_info": {
+            "type": "object",
+            "properties": {
+                "cost": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "company_agent_service.Get_company_data_args": {
+            "type": "object",
+            "properties": {
+                "ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "company_agent_service.Get_company_data_reply": {
+            "type": "object",
+            "properties": {
+                "err": {
+                    "$ref": "#/definitions/errcode.Errcode"
+                },
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/company_agent_service.Company_data_info"
+                    }
+                }
+            }
+        },
+        "errcode.Errcode": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "错误码",
+                    "type": "integer"
+                },
+                "from": {
+                    "description": "来源 {3000: user_service}",
+                    "type": "integer"
+                },
+                "msg": {
+                    "description": "错误消息",
+                    "type": "string",
+                    "example": "错误消息"
+                }
+            }
+        }
+    }
+}

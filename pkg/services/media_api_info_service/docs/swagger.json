@@ -1,0 +1,229 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "媒体api信息服务",
+        "title": "media-api-info-service",
+        "termsOfService": "https://github.com/DAN-AND-DNA?tab=stars",
+        "contact": {
+            "name": "Snk技术开发中心",
+            "email": "danyang.chen@snkad.cn"
+        },
+        "version": "0.1.0"
+    },
+    "basePath": "/",
+    "paths": {
+        "/v1.media-api-info-service.Create_token": {
+            "post": {
+                "description": "创建token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "media-api-info-service"
+                ],
+                "summary": "创建token",
+                "parameters": [
+                    {
+                        "description": "args",
+                        "name": "args",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/media_api_info_service.Create_token_args"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "reply",
+                        "schema": {
+                            "$ref": "#/definitions/media_api_info_service.Create_token_reply"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1.media-api-info-service.Manual_refresh_token": {
+            "post": {
+                "description": "手动刷新token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "media-api-info-service"
+                ],
+                "summary": "手动刷新token",
+                "parameters": [
+                    {
+                        "description": "args",
+                        "name": "args",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/media_api_info_service.Manual_refresh_token_args"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "reply",
+                        "schema": {
+                            "$ref": "#/definitions/media_api_info_service.Manual_refresh_token_reply"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1.media-api-info-service.Ping": {
+            "post": {
+                "description": "ping",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "media-api-info-service"
+                ],
+                "summary": "ping",
+                "parameters": [
+                    {
+                        "description": "args",
+                        "name": "args",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/media_api_info_service.Ping_args"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "reply",
+                        "schema": {
+                            "$ref": "#/definitions/media_api_info_service.Ping_reply"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "errcode.Errcode": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "错误码",
+                    "type": "integer"
+                },
+                "from": {
+                    "description": "来源 {3000: user_service}",
+                    "type": "integer"
+                },
+                "msg": {
+                    "description": "错误消息",
+                    "type": "string",
+                    "example": "错误消息"
+                }
+            }
+        },
+        "media_api_info_service.Create_token_args": {
+            "type": "object",
+            "properties": {
+                "appid": {
+                    "description": "头条的appid",
+                    "type": "integer",
+                    "example": 1234567
+                },
+                "media_name": {
+                    "type": "string",
+                    "example": "媒体名"
+                },
+                "media_type": {
+                    "description": "媒体类型 (1: 头条)",
+                    "type": "integer",
+                    "example": 1
+                },
+                "refresh_token": {
+                    "type": "string",
+                    "example": "头条刷新token"
+                },
+                "secret": {
+                    "type": "string",
+                    "example": "头条密钥"
+                },
+                "tid": {
+                    "type": "string",
+                    "example": "事务id"
+                },
+                "usage": {
+                    "type": "string",
+                    "example": "用处"
+                }
+            }
+        },
+        "media_api_info_service.Create_token_reply": {
+            "type": "object",
+            "properties": {
+                "err": {
+                    "$ref": "#/definitions/errcode.Errcode"
+                }
+            }
+        },
+        "media_api_info_service.Manual_refresh_token_args": {
+            "type": "object",
+            "properties": {
+                "app_id": {
+                    "description": "头条app id",
+                    "type": "integer",
+                    "example": 1234567
+                },
+                "media_type": {
+                    "description": "媒体类型 (1: 头条)",
+                    "type": "integer",
+                    "example": 1
+                },
+                "tid": {
+                    "type": "string",
+                    "example": "事务id"
+                }
+            }
+        },
+        "media_api_info_service.Manual_refresh_token_reply": {
+            "type": "object",
+            "properties": {
+                "err": {
+                    "$ref": "#/definitions/errcode.Errcode"
+                }
+            }
+        },
+        "media_api_info_service.Ping_args": {
+            "type": "object",
+            "properties": {
+                "msg": {
+                    "type": "string",
+                    "example": "ping"
+                }
+            }
+        },
+        "media_api_info_service.Ping_reply": {
+            "type": "object",
+            "properties": {
+                "err": {
+                    "$ref": "#/definitions/errcode.Errcode"
+                },
+                "msg": {
+                    "type": "string",
+                    "example": "pong"
+                }
+            }
+        }
+    }
+}

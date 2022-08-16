@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: company-agent-service
+  namespace: snk-development
+spec:
+  ports:
+    - name: arpc
+      protocol: TCP
+      port: 37001
+      targetPort: 37001
+    - name: swag
+      protocol: TCP
+      port: 3777
+      targetPort: 3777
+  selector:
+    app: company-agent-service
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: company-agent-service
+  namespace: snk-development
+  labels:
+    app: company-agent-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: company-agent-service
+  template:
+    metadata:
+      labels:
+        app: company-agent-service
+    spec:
+      containers:
+      - name: company-agent-service
+        image: swr.cn-south-1.myhuaweicloud.com/yunfan/dev_company_agent_service:2d6c8c494df3084300294a28792e280c2766e097
+        resources:
+          requests:
+            memory: "200M"
+            cpu: "200m"
+          limits:
+            memory: "350M"
+            cpu: "400m"
+        args:
+          - --log-level=debug
+          - --arpc-listen-port=37001
+          - --arpc-app-protocol=json
+          - --arpc-swag=on
+        ports:
+          - name: arpc
+            containerPort: 37001
+          - name: swag
+            containerPort: 3777
+      securityContext:
+        sysctls:
+        - name: net.ipv4.ip_local_port_range
+          value: "1024 65535"

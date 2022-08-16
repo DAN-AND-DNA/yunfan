@@ -1,0 +1,285 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  namespace: snk-development
+spec:
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: postgres-service
+  namespace: snk-development
+subsets:
+  - addresses:
+    - ip: 192.168.7.226
+    ports:
+      - port: 5432
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: media-api-info-service
+  namespace: snk-development
+spec:
+  ports:
+    - name: arpc
+      protocol: TCP
+      port: 37001
+      targetPort: 37001
+    - name: swag
+      protocol: TCP
+      port: 3777
+      targetPort: 3777
+  selector:
+    app: media-api-info-service
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: media-api-info-service
+  namespace: snk-development
+  labels:
+    app: media-api-info-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: media-api-info-service
+  template:
+    metadata:
+      labels:
+        app: media-api-info-service
+    spec:
+      containers:
+      - name: media-api-info-service
+        image: swr.cn-south-1.myhuaweicloud.com/yunfan/dev_media_api_info_service:2d6c8c494df3084300294a28792e280c2766e097
+        resources:
+          requests:
+            memory: "56M"
+            cpu: "70m"
+          limits:
+            memory: "100M"
+            cpu: "200m"
+        args:
+          - --db-postgresql-dsn=host=postgres-service user=media-api-info-service password=lkoji9u87 dbname=media-api-info-service port=5432 sslmode=disable TimeZone=Asia/Shanghai
+          - --log-level=debug
+          - --arpc-listen-port=37001
+          - --arpc-app-protocol=json
+          - --arpc-swag=on
+        ports:
+          - name: arpc
+            containerPort: 37001
+          - name: swag
+            containerPort: 3777
+      securityContext:
+        sysctls:
+        - name: net.ipv4.ip_local_port_range
+          value: "1024 65535"
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  namespace: snk-development
+spec:
+  ports:
+    - name: arpc
+      protocol: TCP
+      port: 37001
+      targetPort: 37001
+    - name: swag
+      protocol: TCP
+      port: 3777
+      targetPort: 3777
+  selector:
+    app: user-service
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+  namespace: snk-development
+  labels:
+    app: user-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+      - name: user-service
+        image: swr.cn-south-1.myhuaweicloud.com/yunfan/dev_user_service:2d6c8c494df3084300294a28792e280c2766e097
+        resources:
+          requests:
+            memory: "70M"
+            cpu: "70m"
+          limits:
+            memory: "100M"
+            cpu: "250m"
+        args:
+          - --db-postgresql-dsn=host=postgres-service user=user-service password=lkoji9u87 dbname=user-service port=5432 sslmode=disable TimeZone=Asia/Shanghai
+          - --log-level=debug
+          - --arpc-listen-port=37001
+          - --arpc-app-protocol=json
+          - --arpc-swag=on
+        ports:
+          - name: arpc
+            containerPort: 37001
+          - name: swag
+            containerPort: 3777
+      securityContext:
+        sysctls:
+        - name: net.ipv4.ip_local_port_range
+          value: "1024 65535"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: etcd-service
+  namespace: snk-development
+spec:
+  ports:
+    - protocol: TCP
+      port: 2379
+      targetPort: 2379
+  selector:
+    app: etcd-service
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: etcd-service
+  namespace: snk-development
+  labels:
+    app: etcd-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: etcd-service
+  template:
+    metadata:
+      labels:
+        app: etcd-service
+    spec:
+      containers:
+      - name: etcd-service
+        image: 	bitnami/etcd:3.5.0
+        resources:
+          requests:
+            memory: "70M"
+            cpu: "70m"
+          limits:
+            memory: "500M"
+            cpu: "250m"
+        volumeMounts:
+        - name: etcd-storage
+          mountPath: /data/etcd
+        command: ["etcd"]
+        args:
+            - --name
+            - etcd
+            - --advertise-client-urls
+            - http://0.0.0.0:2379
+            - -listen-client-urls
+            - http://0.0.0.0:2379
+            - --initial-advertise-peer-urls
+            - http://0.0.0.0:2380
+            - --listen-peer-urls
+            - http://0.0.0.0:2380
+            - --initial-cluster
+            - etcd=http://0.0.0.0:2380
+            - --initial-cluster-state
+            - new
+            - -data-dir
+            - /data/etcd
+        ports:
+          - name: tcp
+            containerPort: 2379
+      volumes:
+        - name: etcd-storage
+          emptyDir:
+            medium: Memory
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: task-id-service
+  namespace: snk-development
+spec:
+  ports:
+    - name: arpc
+      protocol: TCP
+      port: 38001
+      targetPort: 38001
+  selector:
+    app: task-id-service
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: task-id-service
+  namespace: snk-development
+  labels:
+    app: task-id-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: task-id-service
+  template:
+    metadata:
+      labels:
+        app: task-id-service
+    spec:
+      containers:
+      - name: task-id-service
+        image: swr.cn-south-1.myhuaweicloud.com/yunfan/dev_task_id_service:2d6c8c494df3084300294a28792e280c2766e097
+        resources:
+          requests:
+            memory: "70M"
+            cpu: "70m"
+          limits:
+            memory: "100M"
+            cpu: "250m"
+        command: ["/usr/local/bin/task_id_service"]
+        args:
+            - --db-postgresql-dsn=host=postgres-service user=task-id-service password=lkoji9u87 dbname=task-id-service port=5432 sslmode=disable TimeZone=Asia/Shanghai
+            - --log-level=debug
+            - --arpc-listen-port=38001
+            - --arpc-app-protocol=rpc
+            - --arpc-swag=on
+            - --etcd-addrs=etcd-service:2379
+        ports:
+          - name: arpc
+            containerPort: 38001
+        imagePullPolicy: IfNotPresent 
+      securityContext:
+        sysctls:
+        - name: net.ipv4.ip_local_port_range
+          value: "1024 65535"
+

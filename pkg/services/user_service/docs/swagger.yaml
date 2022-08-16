@@ -1,0 +1,249 @@
+basePath: /
+definitions:
+  errcode.Errcode:
+    properties:
+      code:
+        description: 错误码
+        type: integer
+      from:
+        description: '来源 {3000: user_service}'
+        type: integer
+      msg:
+        description: 错误消息
+        example: 错误消息
+        type: string
+    type: object
+  user_service.Create_company_args:
+    properties:
+      company_describe:
+        example: 公司描述
+        type: string
+      company_name:
+        example: 公司名
+        type: string
+      sysid:
+        description: 系统id
+        example: 1
+        type: integer
+      tid:
+        example: 事务id
+        type: string
+    type: object
+  user_service.Create_company_reply:
+    properties:
+      err:
+        $ref: '#/definitions/errcode.Errcode'
+    type: object
+  user_service.Create_system_args:
+    properties:
+      system_describe:
+        example: 系统描述
+        type: string
+      system_name:
+        example: 系统名称
+        type: string
+      tid:
+        example: 事务id
+        type: string
+    type: object
+  user_service.Create_system_reply:
+    properties:
+      err:
+        $ref: '#/definitions/errcode.Errcode'
+    type: object
+  user_service.Create_user_args:
+    properties:
+      cid:
+        description: 公司id
+        example: 1
+        type: integer
+      password:
+        example: 密码
+        type: string
+      tid:
+        example: 事务id
+        type: string
+      username:
+        example: 用户名
+        type: string
+    type: object
+  user_service.Create_user_reply:
+    properties:
+      err:
+        $ref: '#/definitions/errcode.Errcode'
+    type: object
+  user_service.Gen_id_args:
+    properties:
+      tid:
+        example: 事务id
+        type: string
+      type:
+        description: '1: 公司 2: 用户'
+        example: 1
+        type: integer
+    type: object
+  user_service.Gen_id_reply:
+    properties:
+      err:
+        $ref: '#/definitions/errcode.Errcode'
+      id:
+        description: 产生的id
+        example: 1
+        type: integer
+    type: object
+  user_service.Get_auth_info_args:
+    type: object
+  user_service.Get_auth_info_reply:
+    properties:
+      err:
+        $ref: '#/definitions/errcode.Errcode'
+    type: object
+  user_service.Get_idle_toutiao_appid_args:
+    type: object
+  user_service.Get_idle_toutiao_appid_reply:
+    properties:
+      err:
+        $ref: '#/definitions/errcode.Errcode'
+    type: object
+info:
+  contact:
+    email: danyang.chen@snkad.cn
+    name: Snk技术开发中心
+  description: 用户服务
+  termsOfService: https://github.com/DAN-AND-DNA?tab=stars
+  title: user-service
+  version: 0.1.0
+paths:
+  /v1.user-service.Create_company:
+    post:
+      consumes:
+      - application/json
+      description: 创建公司
+      parameters:
+      - description: args
+        in: body
+        name: args
+        required: true
+        schema:
+          $ref: '#/definitions/user_service.Create_company_args'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: reply
+          schema:
+            $ref: '#/definitions/user_service.Create_company_reply'
+      summary: 创建公司
+      tags:
+      - user-service
+  /v1.user-service.Create_system:
+    post:
+      consumes:
+      - application/json
+      description: 创建系统
+      parameters:
+      - description: args
+        in: body
+        name: args
+        required: true
+        schema:
+          $ref: '#/definitions/user_service.Create_system_args'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: reply
+          schema:
+            $ref: '#/definitions/user_service.Create_system_reply'
+      summary: 创建系统
+      tags:
+      - user-service
+  /v1.user-service.Create_user:
+    post:
+      consumes:
+      - application/json
+      description: 创建用户
+      parameters:
+      - description: args
+        in: body
+        name: args
+        required: true
+        schema:
+          $ref: '#/definitions/user_service.Create_user_args'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: reply
+          schema:
+            $ref: '#/definitions/user_service.Create_user_reply'
+      summary: 创建用户
+      tags:
+      - user-service
+  /v1.user-service.Gen_id:
+    post:
+      consumes:
+      - application/json
+      description: 创建id
+      parameters:
+      - description: args
+        in: body
+        name: args
+        required: true
+        schema:
+          $ref: '#/definitions/user_service.Gen_id_args'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: reply
+          schema:
+            $ref: '#/definitions/user_service.Gen_id_reply'
+      summary: 创建id
+      tags:
+      - user-service
+  /v1.user-service.Get_auth_info:
+    post:
+      consumes:
+      - application/json
+      description: 获得授权信息
+      parameters:
+      - description: args
+        in: body
+        name: args
+        required: true
+        schema:
+          $ref: '#/definitions/user_service.Get_auth_info_args'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: reply
+          schema:
+            $ref: '#/definitions/user_service.Get_auth_info_reply'
+      summary: 获得授权信息
+      tags:
+      - user-service
+  /v1.user-service.Get_idle_toutiao_appid:
+    post:
+      consumes:
+      - application/json
+      description: 获得空闲头条appid
+      parameters:
+      - description: args
+        in: body
+        name: args
+        required: true
+        schema:
+          $ref: '#/definitions/user_service.Get_idle_toutiao_appid_args'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: reply
+          schema:
+            $ref: '#/definitions/user_service.Get_idle_toutiao_appid_reply'
+      summary: 获得空闲头条appid
+      tags:
+      - user-service
+swagger: "2.0"

@@ -1,0 +1,155 @@
+basePath: /
+definitions:
+  errcode.Errcode:
+    properties:
+      code:
+        description: 错误码
+        type: integer
+      from:
+        description: '来源 {3000: user_service}'
+        type: integer
+      msg:
+        description: 错误消息
+        example: 错误消息
+        type: string
+    type: object
+  media_api_info_service.Create_token_args:
+    properties:
+      appid:
+        description: 头条的appid
+        example: 1234567
+        type: integer
+      media_name:
+        example: 媒体名
+        type: string
+      media_type:
+        description: '媒体类型 (1: 头条)'
+        example: 1
+        type: integer
+      refresh_token:
+        example: 头条刷新token
+        type: string
+      secret:
+        example: 头条密钥
+        type: string
+      tid:
+        example: 事务id
+        type: string
+      usage:
+        example: 用处
+        type: string
+    type: object
+  media_api_info_service.Create_token_reply:
+    properties:
+      err:
+        $ref: '#/definitions/errcode.Errcode'
+    type: object
+  media_api_info_service.Manual_refresh_token_args:
+    properties:
+      app_id:
+        description: 头条app id
+        example: 1234567
+        type: integer
+      media_type:
+        description: '媒体类型 (1: 头条)'
+        example: 1
+        type: integer
+      tid:
+        example: 事务id
+        type: string
+    type: object
+  media_api_info_service.Manual_refresh_token_reply:
+    properties:
+      err:
+        $ref: '#/definitions/errcode.Errcode'
+    type: object
+  media_api_info_service.Ping_args:
+    properties:
+      msg:
+        example: ping
+        type: string
+    type: object
+  media_api_info_service.Ping_reply:
+    properties:
+      err:
+        $ref: '#/definitions/errcode.Errcode'
+      msg:
+        example: pong
+        type: string
+    type: object
+info:
+  contact:
+    email: danyang.chen@snkad.cn
+    name: Snk技术开发中心
+  description: 媒体api信息服务
+  termsOfService: https://github.com/DAN-AND-DNA?tab=stars
+  title: media-api-info-service
+  version: 0.1.0
+paths:
+  /v1.media-api-info-service.Create_token:
+    post:
+      consumes:
+      - application/json
+      description: 创建token
+      parameters:
+      - description: args
+        in: body
+        name: args
+        required: true
+        schema:
+          $ref: '#/definitions/media_api_info_service.Create_token_args'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: reply
+          schema:
+            $ref: '#/definitions/media_api_info_service.Create_token_reply'
+      summary: 创建token
+      tags:
+      - media-api-info-service
+  /v1.media-api-info-service.Manual_refresh_token:
+    post:
+      consumes:
+      - application/json
+      description: 手动刷新token
+      parameters:
+      - description: args
+        in: body
+        name: args
+        required: true
+        schema:
+          $ref: '#/definitions/media_api_info_service.Manual_refresh_token_args'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: reply
+          schema:
+            $ref: '#/definitions/media_api_info_service.Manual_refresh_token_reply'
+      summary: 手动刷新token
+      tags:
+      - media-api-info-service
+  /v1.media-api-info-service.Ping:
+    post:
+      consumes:
+      - application/json
+      description: ping
+      parameters:
+      - description: args
+        in: body
+        name: args
+        required: true
+        schema:
+          $ref: '#/definitions/media_api_info_service.Ping_args'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: reply
+          schema:
+            $ref: '#/definitions/media_api_info_service.Ping_reply'
+      summary: ping
+      tags:
+      - media-api-info-service
+swagger: "2.0"
